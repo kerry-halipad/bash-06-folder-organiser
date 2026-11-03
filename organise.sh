@@ -19,16 +19,12 @@ for f in "$target_dir"/*; do
     ext="${filename##*.}"
     ext=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
         if [ "$filename" = "$ext" ] ; then
-        ext="[ no extension ]"
+        ext=""
         fi
 
-        echo "File: $filename | Extension: $ext"
-    fi
-done
-
 #categorizing each file according to their extensions
-case "ext" in
-    JPG|jpeg|png|gif|webp)
+case "$ext" in
+    jpg|jpeg|png|gif|webp)
         category="image"
         ;;
     pdf|doc|docx|txt|xlsx|pptx)
@@ -47,3 +43,9 @@ case "ext" in
         category="other"
         ;;
 esac                        
+
+echo "$filename = $category/"
+
+    fi
+
+done
