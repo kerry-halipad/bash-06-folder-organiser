@@ -50,6 +50,8 @@ dest_dir="$target_dir/$category"
 mkdir -p "$dest_dir"
 mv "$f" "$dest_dir/$filename"
 echo " $filename = $category/"
+((move_count++))
     fi
 
 done
+echo "Done: $move_count files moved"
