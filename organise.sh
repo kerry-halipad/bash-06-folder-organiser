@@ -44,8 +44,12 @@ case "$ext" in
         ;;
 esac                        
 
-echo "$filename = $category/"
+dest_dir="$target_dir/$category"
 
+#creating category folder when file moves into it
+mkdir -p "$dest_dir"
+mv "$f" "$dest_dir/$filename"
+echo " $filename = $category/"
     fi
 
 done
