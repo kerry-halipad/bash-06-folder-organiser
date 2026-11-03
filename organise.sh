@@ -25,3 +25,25 @@ for f in "$target_dir"/*; do
         echo "File: $filename | Extension: $ext"
     fi
 done
+
+#categorizing each file according to their extensions
+case "ext" in
+    JPG|jpeg|png|gif|webp)
+        category="image"
+        ;;
+    pdf|doc|docx|txt|xlsx|pptx)
+        category="Documents"
+        ;;
+    mp3|wav|m4a)
+        category="Audio"
+        ;;
+    mp4|mkv|mov)
+        category="video"
+        ;;
+    zip|rar|tar|gz)
+        category="Archives"
+        ;;
+    *)
+        category="other"
+        ;;
+esac                        
