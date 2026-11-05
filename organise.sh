@@ -1,24 +1,29 @@
 #!/usr/bin/env bash
 #1. folder to organise: current folder or first argument if none given.
 
-target_dir="${1:-.}"
+folder="${1:-.}"
 
 #2. if folder doesn't exist print an error with stderr and exit with status 1
 
-if [[ ! -d "$target_dir" ]] ; then
-    echo "Error: Directory '$target_dir' doesn't exist." >&2
+if [[ ! -d "$folder" ]] ; then
+    echo "Error: Directory '$folder' doesn't exist." >&2
 fi
+
+echo "organising $folder........."
+
+move_count=0
+
 #3. Loop over the files with for f in "$folder"/*, skip anything that isn't a file, and just print each name and its lowercase extension.
 # Don't move anything yet.
 
-for f in "$target_dir"/*; do
+for f in "$folder"/*; do
     if [ -f "$f" ]; then
-        filename=$(basename "$f")
+        name=$(basename "$f")
 
 #extract extention convert it into lowercase
-    ext="${filename##*.}"
+    ext="${name##*.}"
     ext=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
-        if [ "$filename" = "$ext" ] ; then
+        if [ "$name" = "$ext" ] ; then
         ext=""
         fi
 
@@ -44,14 +49,38 @@ case "$ext" in
         ;;
 esac                        
 
-dest_dir="$target_dir/$category"
+mkdir -p "$folder/$category"
 
-#creating category folder when file moves into it
-mkdir -p "$dest_dir"
-mv "$f" "$dest_dir/$filename"
-echo " $filename = $category/"
-((move_count++))
+dest="$folder/$category/$name"
+
+if [ -e "$dest" ]; then
+
+    if [[ "$name" == *.* ]]; then
+        base="${name%.*}"
+        ext="${name##.}"
+    else
+        base="${name}"
+        ext=""    
     fi
 
+ 
+
+n=1
+    while [ -e "$dest" ]; do
+        if [ -z "$ext" ]; then
+            dest="$folder/$category/${base}($n)"
+        else    
+            dest="$folder/$category/${base}($n).$ext"
+        fi    
+    ((n++))
+    done
+fi
+#creating category folder when file moves into it
+
+mv "$f" "$dest"
+
+echo " $name move to $category/$(basename "$dest")"
+((move_count++))
+    fi   
 done
-echo "Done: $move_count files moved"
+    echo "Done: $move_count files moved"
